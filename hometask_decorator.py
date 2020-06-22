@@ -1,4 +1,4 @@
-import datetime
+import time
 import random
 
 def repeater(repeats):
@@ -6,15 +6,15 @@ def repeater(repeats):
     def decorator(func):
 
         def wrapper(*args):
-
+            a = time.time()
             for i in range(repeats):
-                a = datetime.datetime.today()
+
                 c = func(*args)
 
-                b = datetime.datetime.today()
-                c = b - a
-                print(f"Время выполнения функции: {c}")
-            return c
+            b = time.time()
+            c = b - a
+            print("Время выполнения функции: ", c)
+            return func, c
         return wrapper
     return decorator
 
