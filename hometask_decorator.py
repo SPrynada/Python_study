@@ -13,8 +13,8 @@ def repeater(repeats):
 
             b = time.time()
             c = b - a
-            print("Время выполнения функции: ", c)
-            return func, c
+
+            return print(f"Время выполнения функции {func.__name__} {repeats} раз: {c}")
         return wrapper
     return decorator
 
