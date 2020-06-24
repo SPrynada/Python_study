@@ -1,45 +1,45 @@
 class Point:
 
     def __init__(self, a, b, c):
-        self.a = a
-        self.b = b
-        self.c = c
+        self.__a = a
+        self.__b = b
+        self.__c = c
 
     def get_a(self):
-        return self.a
+        return self.__a
 
     def get_b(self):
-        return self.b
+        return self.__b
 
     def get_c(self):
-        return self.c
+        return self.__c
 
     def __add__(self, other):
-        new_a = self.a + other.get_a()
-        new_b = self.b + other.get_b()
-        new_c = self.c + other.get_c()
+        new_a = self.__a + other.get_a()
+        new_b = self.__b + other.get_b()
+        new_c = self.__c + other.get_c()
         return Point(new_a, new_b, new_c)
 
     def __sub__(self, other):
-        new_a = self.a - other.get_a()
-        new_b = self.b - other.get_b()
-        new_c = self.c - other.get_c()
+        new_a = self.__a - other.get_a()
+        new_b = self.__b - other.get_b()
+        new_c = self.__c - other.get_c()
         return Point(new_a, new_b, new_c)
 
     def __mul__(self, other):
-        new_a = self.a * other.get_a()
-        new_b = self.b * other.get_b()
-        new_c = self.c * other.get_c()
+        new_a = self.__a * other.get_a()
+        new_b = self.__b * other.get_b()
+        new_c = self.__c * other.get_c()
         return Point(new_a, new_b, new_c)
 
     def __truediv__(self, other):
-        new_a = self.a / other.get_a()
-        new_b = self.b / other.get_b()
-        new_c = self.c / other.get_c()
+        new_a = self.__a / other.get_a()
+        new_b = self.__b / other.get_b()
+        new_c = self.__c / other.get_c()
         return Point(new_a, new_b, new_c)
 
     def __str__(self):
-        return f'the new point has coordinates: [{self.a}, {self.b}, {self.c}]'
+        return f'the new point has coordinates: [{self.__a}, {self.__b}, {self.__c}]'
 
 
 obj = Point(1, 2, 3)
