@@ -1,25 +1,22 @@
 class Customlist(object):
 
     def __init__(self, elements=0):
-        # self.elements = elements
         self.mylist = [0] * elements
 
     def __getitem__(self, index):
-        # self.index = index
-        return print(f'Значение {index}-го элемента списка = {self.mylist[index]}')
+        return self.mylist[index]
 
     def __setitem__(self, index, value):
-        # self.index = index
-        # self.value = value
         self.mylist[index] = value
 
     def __str__(self):
         return str(self.mylist)
 
     def __add__(self, other):
+        a = self.mylist.copy()
         for i in other:
-            self.mylist.append(i)
-        return self.mylist
+            a.append(i)
+        return a
 
     def append_(self, value):
         self.mylist.append(value)
