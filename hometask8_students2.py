@@ -47,7 +47,7 @@ def initianization():
 def all_data():
     with DataStudents('lesson8.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM students')
+        cursor.execute('SELECT * FROM student')
         print(cursor.fetchall())
 
 
@@ -67,7 +67,7 @@ def inputstudent():
         faculty_ = str(input('Введите Факультет: '))
         groupp_ = int(input('Введите Номер группы: '))
         student_number_ = int(input('Введите Номер студента: '))
-        cursor.execute("INSERT INTO  students ('first_name', 'last_name', 'faculty', 'groupp', 'student_number') "
+        cursor.execute("INSERT INTO  student ('first_name', 'last_name', 'faculty', 'groupp', 'student_number') "
                        "VALUES (?, ?, ?, ?, ?)", (first_name_, last_name_, faculty_, groupp_, student_number_))
         print(cursor.fetchall())
         conn.commit()
@@ -76,7 +76,7 @@ def studentsdelete():
     with DataStudents('lesson8.db') as conn:
         cursor = conn.cursor()
         student_number_ = int(input('Введите Номер студента: '))
-        cursor.execute("DELETE FROM students WHERE (student_number=?)", [student_number_])
+        cursor.execute("DELETE FROM student WHERE (student_number=?)", [student_number_])
         print(cursor.fetchall())
         conn.commit()
 
@@ -94,67 +94,95 @@ def inputgrade():
 def findstudent(st_number):
     with DataStudents('lesson8.db') as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT first_name, last_name, faculty, grade FROM students "
-                       "LEFT JOIN grades ON students.student_number=grades.student_number "
-                       "GROUP BY students.student_number")
-        # cursor.execute("SELECT first_name, last_name, faculty FROM students WHERE MAX(avg_grade)")
+        cursor.execute("SELECT first_name, last_name, faculty, grade FROM student "
+                       "LEFT JOIN grades ON student.student_number=grades.student_number "
+                       "WHERE student.student_number = ?", [st_number])
         print(cursor.fetchall())
 
-def findstudent_grades(st_number):
+def findstudent_grades():
     with DataStudents('lesson8.db') as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT first_name, last_name, faculty, avg(grades.grade) FROM students "
-                       "LEFT JOIN grades ON students.student_number=grades.student_number "
-                       "GROUP BY students.student_number")
-        # cursor.execute("SELECT first_name, last_name, faculty FROM students WHERE MAX(avg_grade)")
+        cursor.execute("SELECT student.student_number, first_name, last_name, faculty, avg(grades.grade) "
+                       "FROM student LEFT JOIN grades ON student.student_number=grades.student_number "
+                       "GROUP BY student.student_number")
+                       # "WHERE avg(grades.grade) = ?", [av_grade])
         print(cursor.fetchall())
 
 allowed_functions = initianization()
 # print(allowed_functions)
 
 if allowed_functions == 1:
-
-    required_functions = int(input('Вам разрешены следующие действия:\n'
-                                    'Добавить студента: введите 1\n'
-                                    'Добавить оценки студента: введите 2\n'
-                                    'Распечатать всех студентов: введите 3\n'
-                                    'Распечатать оценки студента: введите 4\n'
-                                    'Удалить запись студента: введите 5\n'
-                                    'Найти студента по среднему баллу: введите 6\n'
-                                    'Выйти из программы: введите любой другой символ\n'))
-    if required_functions == 1:
-        inputstudent()
-    elif required_functions == 2:
-        stopvalue = 0
-        while stopvalue != 1:
-            inputgrade()
-            more_data = str(input('Еще будете добавлять оценки Студента: Y/ N - '))
-            if more_data not in ['Y','y']:
-                stopvalue = 1
-    elif required_functions == 3:
-        all_data()
-    elif required_functions == 4:
-        studentsgrades()
-    elif required_functions == 5:
-        studentsdelete()
-    elif required_functions == 6:
-        search_grade = float(input('Введите средний бал для поиска: '))
-        findstudent(search_grade)
+    required_functions = 3
+    while required_functions in [1, 2, 3, 4, 5, 6, 7]:
+        required_functions = int(input('Вам разрешены следующие действия:\n'
+                                        'Добавить студента: введите 1\n'
+                                        'Добавить оценки студента: введите 2\n'
+                                        'Распечатать всех студентов: введите 3\n'
+                                        'Распечатать оценки студента: введите 4\n'
+                                        'Удалить запись студента: введите 5\n'
+                                        'Найти данные студента по номеру: введите 6\n'
+                                        'Найти студента по среднему баллу: введите 7\n'
+                                        'Выйти из программы: введите любой другой символ\n'))
+        if required_functions == 1:
+            inputstudent()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 2:
+            stopvalue = 0
+            while stopvalue != 1:
+                inputgrade()
+                more_data = str(input('Еще будете добавлять оценки Студента: Y/ N - '))
+                if more_data not in ['Y','y']:
+                    stopvalue = 1
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 3:
+            all_data()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 4:
+            studentsgrades()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 5:
+            studentsdelete()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 6:
+            search_grade = float(input('Введите номер студента: '))
+            findstudent(search_grade)
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 7:
+            # search_grade = float(input('Введите средний бал для поиска: '))
+            findstudent_grades()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
 
 if allowed_functions == 2:
-
-    required_functions = int(input('Вам разрешены следующие действия:\n'
-                                   'Распечатать всех студентов: введите 1\n'
-                                   'Распечатать оценки студента: введите 2\n'
-                                   'Удалить запись студента: введите 3\n'
-                                   'Найти студента по среднему баллу: введите 4\n'
-                                   'Выйти из программы: введите любой другой символ\n'))
-    if required_functions == 1:
-        all_data()
-    elif required_functions == 2:
-        studentsgrades()
-    elif required_functions == 3:
-        studentsdelete()
-    elif required_functions == 4:
-        search_grade = float(input('Введите средний бал для поиска: '))
-        findstudent()
+    required_functions = 3
+    while required_functions in [1, 2, 3, 4]:
+        required_functions = int(input('Вам разрешены следующие действия:\n'
+                                       'Распечатать всех студентов: введите 1\n'
+                                       'Распечатать оценки студента: введите 2\n'
+                                       'Найти данные студента по номеру: введите 3\n'
+                                       'Найти студента по среднему баллу: введите 4\n'
+                                       'Выйти из программы: введите любой другой символ\n'))
+        if required_functions == 1:
+            all_data()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 2:
+            studentsgrades()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 3:
+            search_grade = float(input('Введите номер студента: '))
+            findstudent(search_grade)
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
+        elif required_functions == 4:
+            # search_grade = float(input('Введите средний бал для поиска: '))
+            findstudent_grades()
+            if str(input('Вернуться в основное меню?: Y/ N - ')) not in ['Y','y']:
+                required_functions = 0
